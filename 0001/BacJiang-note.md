@@ -16,6 +16,8 @@ Google构建了一个*元数据目录*来管理几十亿数据集的元数据，
  - WhereHows
  WhereHows是LinkedIn开源的一个元数据管理系统，一直都有在更新维护。WhereHows： *WHERE is the data, and HOW is it produced/consumed.数据在哪里，数据是生成和消费的*。 它也提供后端元数据抽取工具，以及前端的搜素、分析工具。
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20181029221903590.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3UwMTI5MjI4Mzg=,size_16,color_FFFFFF,t_70)
-和Google类似，也是通过一个高可读权限的账户爬取各类文件系统的元数据，组织存储在MySQL中以供上层使用。
+和Google类似，也是通过一个高可读权限的账户爬取各类文件系统的元数据，并通过*分析日志获得操作记录、血缘关系等数据*，最后组织存储在MySQL中以供上层使用。
+WhereHows主要包含4类数据：
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20181030222622441.png)
 ### 3.启发和总结
 以往认为在构建数据仓库或者数据管理平台的时候，首先是要把所有的汇聚到一起，然后再做上层的各类应用，但往往在实践过程会发现自己有哪些数据，要哪些数据，能做什么。如果能先构建出一个元数据管理系统，既能增加对数据的熟悉度，也能增加数据管理的有效性。
