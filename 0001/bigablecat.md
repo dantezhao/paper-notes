@@ -1,55 +1,94 @@
-#### Goods: Organizing Google’s Datasets  
+#### [Goods: Organizing Google’s Datasets](https://github.com/dantezhao/paper-notes/blob/master/0001/Goods%20Organizing%20Google%E2%80%99s%20Datasets.pdf)  
 ##### <阅读笔记>  
 ```shell  
+Google Dataset Search (Goods)是一个以元数据的形式管理数据集的企业内部系统
+这篇论文介绍了Goods的设计和用途
+
 带着问题阅读：
-1. what 元数据是什么  
-2. why 收集元数据有什么用  
-3. how Goods如何高效地收集元数据
+1. what: Goods系统是做什么的  
+2. why: 为什么需要Goods系统  
+3. how: Goods系统是如何设计的
 ```  
-  
+ 
 **0. 摘要**  
 
 **0.1 文章目标**  
-* 本文主要探讨从亿万级数据源爬取和推断元数据需要克服的技术问题  
+* 探讨做到如下三点所面临的技术挑战 (Challenges)  
+```shell  
+从亿万级数据源爬取和推断元数据
+
+维持大规模元数据目录的一致性
+
+使用元数据为用户提供服务
+```  
 * 对于打造大规模企业级数据管理系统的借鉴意义  
 
 **1. 引言**  
 
-**1.1 Enterprise Data Management (EDM)**  
-* EDM是企业通用的一种数据集管理方式  
-* 数据使用者在处理数据时受限于EDM系统  
-* 一个EDM的备选方案类似于数据湖，让使用者拥有完全开放的权限访问所有数据  
-* 数据湖包括企业不断生成和累积的所有数据，使用时需要像钓鱼一样从湖中找到所需数据  
+**1.1 企业数据管理的两种形式**  
+* Enterprise Data Management (EDM)  
+```shell  
+生成数据集和管理数据集都在一套系统内
+
+系统本身限制了数据的生产和流转
+```  
+* Data Lake  
+```shell  
+与EDM不同的是，Data Lake采取事后(post-hoc)模式  
+
+不介入数据的生产和使用
+
+只为已经生成的数据提供一套有效的管理工具
+
+所以这是一种事后(post-hoc)行为
+
+lake的比喻很形象，数据不断生成和累积汇聚成湖，查找数据就像从湖中钓鱼("fish the right data")  
+```  
 
 **1.2 Google Dataset Search (Goods)**  
-* 本文介绍谷歌数据集检索系统Google Dataset Search，简称Goods  
-* 不同类型的信息源生成、访问或更新之后的数据集  
-* 通过Goods在不干扰数据集所有者和使用者的情况下，采集并聚合数据集的元数据信息
+* Goods是一个静默的服务者
+```shell  
+Goods的全称是Google Dataset Search，但它的功能不限于search
+
+Goods采用了类似Data Lake的形式，对数据进行事后(post-hoc)管理
+
+post-hoc将在文中多次出现，强调Goods是静默的辅助工具
+
+作者还用非侵扰(non-intrusive)表明Goods既不影响数据本身，也不影响数据的生产者和使用者
+```  
 
 **1.3 Goods的运作机制**  
-![Goods设计概览图](https://raw.githubusercontent.com/dantezhao/paper-notes/master/0001/Goods_design.png)  
->Goods设计图概览  
+![Goods设计概览](https://raw.githubusercontent.com/dantezhao/paper-notes/master/0001/Goods_design.png)  
+>Goods设计概览  
+
+* 分层介绍  
 ```shell  
-1) Goods在后台运行，以静默无扰的方式收集数据使用情况  
+1) Goods持续地爬取(crawls)各类存储系统和业务线，
+从中发现数据集(datasets)并收集数据集的元数据(datasets)信息和使用情况(usage)
+(见图最底层)  
 
-2) Goods从来自各式存储系统或其他数据源的数据集收集元数据信息
+2) Goods将元数据聚合为一个中央目录(central catalog)，同时把特定数据集的元数据与其他数据集的信息相互关联
+(见图中间层)  
 
-3) Goods通过多种方式推断元数据信息：
-    a. 处理附加资源，如日志或者数据集所有者和项目信息
-    b. 分析数据集内容
-    c. 收集Goods使用者输入
+3) Goods用这套目录的信息构建搜索、监控和数据流可视化等工具，
+从而为Google工程师提供数据管理服务
+(见图最上层)
+```  
 
-4) Goods收集的元数据可能包括：
-   a. 数据所有者
-   b. 访问时间  
-   c. 内容特征
-   d. 生产管线的访问记录  
+* 关于元数据(metadata)  
+```shell  
+1) 元数据信息的一个来源是直接从数据源收集
 
-5) Goods将元数据聚合为一个中央目录，同时把特定数据集的元数据与其他数据集的信息相互关联
+2) 元数据还可以来源于对数据内容的推断(infer)：
+    a. 处理附加的数据源，如日志、数据集所有者和项目信息等
+    c. 分析数据集的内容
+    d. 收集Goods使用者输入
 
-6) Goods利用中央目录的信息构建搜索、监控和数据流可视化等工具
-
-7) 这些工具优化了数据服务，还能促使工程师以更为合规的方式组织和查找数据
+3) Goods收集的元数据可能包括：
+   a. 数据所有者 (owners)
+   b. 访问时间 (time of access)
+   c. 内容特征 (content features)
+   d. 生产管线的访问记录  (accesses by production pipelines)
 ```  
 
 **1.4 Goods提供的一些工具**  
