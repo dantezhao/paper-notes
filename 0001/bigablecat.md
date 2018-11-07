@@ -202,4 +202,81 @@ Goods根据已有数据推断和计算出的元数据，在一定程度并不精
 ```  
 
 **3. Goods系统的目录(Catalog)**  
+* 综述  
+```  
+Google内部每个存储系统都可能维护着自己的catalog，每个catalog还会有自己的metadata
+
+数据在不同的数据集和存储系统之间自由流转是常态
+
+Goods所做的就是为所有存储系统和数据集建立统一的目录
+
+原则上Goods为每个爬取的数据集建立条目(entry)
+
+而出现一些特征相似度高的集群时，Goods会将它们归并为一个集群(cluster)，建立单个条目
+
+集群的一个典型例子就是相同数据集的不同版本
+```  
+
+**3.1 元数据(Metadata)**  
+* 概要  
+```shell  
+终于讲到了Goods系统的关键要素————元数据(metadata)
+
+Goods系统在爬取数据集的时候，会顺带获取一些元数据，如数据集的大小、所有者、访问权限等
+
+但是数据集并没有保存所有的元数据信息，比如生成数据集的作业(jobs)，数据集的访问者等
+
+不能从数据集直接获取的元数据往往存在于日志中
+
+综上所述，Goods除了爬取获得元数据外，还会通过推断(inference)获取元数据
+```  
+![Metadata_Table](https://raw.githubusercontent.com/dantezhao/paper-notes/master/0001/bigablecat_Metadata.png)  
+>元数据(Metadata)和元数据组(Metadata Group)  
+
+* Basic Metata  
+```shell  
+
+```  
+
+* Provenance  
+```shell  
+
+```  
+
+* Schema  
+```shell  
+
+```  
+
+* Content summary  
+```shell  
+
+```  
+
+* User-provided annotations  
+```shell  
+
+```  
+
+* Semantics  
+```shell  
+
+```  
+
+* Semantics  
+```shell  
+
+```  
+
+* 其他  
+```shell  
+除上述类型的元数据外，Goods系统还会将以下信息作为元数据的内容：
+a) 获取一个标识，通过该标识可以确认拥有数据集的团队(team)
+b) 数据集所属项目的描述
+c) 数据集元数据的变更历史
+
+此外，Goods允许团队在目录添加自定义的元数据，从而为所有使用者提供统一管理元数据的平台
+```  
+
+**3.2 数据集群(cluster)**  
 
