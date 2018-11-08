@@ -59,7 +59,7 @@ post-hoc将在文中多次出现，强调Goods是静默的辅助工具
 
 **1.3 Goods的运作机制**  
 ![Goods设计概览](https://raw.githubusercontent.com/dantezhao/paper-notes/master/0001/Goods_design.png)  
->Goods设计概览  
+>图：Goods设计概览  
 
 * 分层介绍  
 ```shell  
@@ -110,7 +110,7 @@ post-hoc将在文中多次出现，强调Goods是静默的辅助工具
 在特征发生意外改变时通知数据所有者
 ```  
 
-* provenance 溯源  
+* provenance 数据血缘关系  
 ```shell  
 生成某数据集的上游数据
   
@@ -231,42 +231,71 @@ Goods系统在爬取数据集的时候，会顺带获取一些元数据，如数
 综上所述，Goods除了爬取获得元数据外，还会通过推断(inference)获取元数据
 ```  
 ![Metadata_Table](https://raw.githubusercontent.com/dantezhao/paper-notes/master/0001/bigablecat_Metadata.png)  
->元数据(Metadata)和元数据组(Metadata Group)  
+>Table2: 元数据(Metadata)和元数据组(Metadata Group)  
 
-* Basic Metata  
+* 基础元数据(Basic Metata)  
 ```shell  
+包括时间戳、文件格式、所有者、访问权限等
 
+基础元数据一般由Goods系统爬取存储系统直接获得，无需推断
+
+Goods的其他模块通常将基础元数据作为行为依据之一
 ```  
 
-* Provenance  
+* 数据血缘/数据谱系(Provenance)  
 ```shell  
+Goods中的元数据血缘关系来自数据集的生产和消费过程、数据集上下游依赖
 
+Goods通过分析生产日志来确定元数据的血缘信息
+
+Goods将时间信息用于决定依赖关系，即晚发生的依赖于早发生的
+
+在计算血缘关系时，Goods为了效率可能会牺牲信息的完整性
 ```  
 
-* Schema  
+* 结构信息(Schema)  
 ```shell  
+Google内几乎所有结构化数据集都是基于serialized protocol buffer编码的
 
+推断数据集使用了哪种形式的protocol buffer编码会产生多个结论
+
+Goods系统把所有可能的protocol buffer形式都记录在元数据中
 ```  
+
 
 * Content summary  
 ```shell  
+Content summary按照字面直译为内容摘要反而不容易理解
 
+实际上，元数据记录的content summary可以看成一套数据的关键字合集
+
+文中举了三个summary的例子：
+a) 抽样(sampling)产生的frequent token
+b) 分析字段(fields)得出的键(key for data)
+c) 有校验和(checksums)的fingerprints
+
+Goods通过summary来判断来自不同数据集的内容或者字段是否相似和相等，
 ```  
 
-* User-provided annotations  
+* 用户注释(User-provided annotations)  
 ```shell  
+一般用户做注释都是为了明确告知数据集的使用者有必要知晓的信息
 
+Goods的元数据通过分析注释来优化排序或者规避数据隐私
 ```  
 
-* Semantics  
+* 语义学信息(Semantics)  
 ```shell  
+数据集的语义学信息可以帮助理解数据集
 
+如果数据集使用了特定的protocol buffer，Goods可以分析源码提取有用的备注(comment)信息
+
+本段中举了个例子，比如数据集中一个名为"mpn"的字段，通过分析备注，发现mpn是"//Model Product Number"的缩写
+这就是获取备注(comment)信息在语义学方面的作用
+
+Google的知识图谱可以作为一个资源库，Goods系统将数据集内容与知识图谱匹配，识别不同字段中包含什么样的条目信息(如位置信息，业务信息)
 ```  
 
-* Semantics  
-```shell  
-
-```  
 
 * 其他  
 ```shell  
