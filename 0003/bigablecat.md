@@ -66,7 +66,7 @@ user_installed_app=netflix值为1
 当出现AND(user_installed_app=netflix, impression_app=pandora)时
 如果用户安装了netflix，那么这个组合的值为1，推荐系统就会显示pandora给用户
 
-交叉特征(cross-product transformation)的局限之一是
+向量叉积变换(cross-product transformation)的局限之一是
 无法泛化出训练数据中没有出现过的"查询-物品"特征组合(query-item feature pair)
 
 ```  
@@ -92,7 +92,7 @@ user_installed_app=netflix值为1
 
 这种情况带来了过度泛化和相关性很弱的推荐
 
-而具有交叉特征的线性模型，就能记住这些参数极少的异常规则(exception rules)
+而具有向量叉积变换的线性模型，就能记住这些参数极少的异常规则(exception rules)
 ```  
 
 * 广度和深度学习框架  
@@ -108,7 +108,7 @@ user_installed_app=netflix值为1
 * 本文的主要贡献  
 ```shell  
 1) 开发了一套广度和深度相结合的学习框架，用于稀疏输入的推荐系统
-这套框架同时训练"带嵌入的前馈神经网络"和"特征转换线性模型"
+这套框架同时训练"带嵌入的前馈神经网络"和"特征变换线性模型"
 
 2) 实现并评测了广度和深度推荐系统在Google Play市场的产品化
 
@@ -155,6 +155,38 @@ c) 印象特征(impression feature)：app年龄，app历史数据
 本文将广度和深度学习框架应用于上述第二个步骤排序系统中
 
 ```  
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
+
+**3. 广度和深度学习**  
+**3.1 广度部分**  
+```shell  
+广度部分是Figure 1中Wide Models部分的广义线性模型
+```  
+
+y = w<sup>T</sup>x + b  
+y表示预测值  
+x=[x<sub>1</sub>, x<sub>2</sub>,..., x<sub>d</sub>] 是d个特征的向量  
+w=[w<sub>1</sub>, w<sub>2</sub>,..., w<sub>d</sub>] 是模型的参数  
+b 是bias(偏差)  
+
+```shell  
+特征集包括原始特征输入和变换后的特征
+
+其中最重要的一个变换就是向量叉积变换
+```  
+
+![cross product transformation](https://raw.githubusercontent.com/dantezhao/paper-notes/master/0003/bigablecat_cross_product_transformation.gif)  
+>向量叉积变换(cross product transformation)公式  
+
+其中C<sub>ki</sub>是一个布尔变量  
+如果第i个特征属于第k个变换<span>&empty;<sub>k</sub></span>  
+那么C<sub>ki</sub>的值为1，否则为0  
+
+```html  
+对于二进制特征，当且仅当组成特征都为1，它的向量叉积变换才是1，否则向量叉积为0
+
+通过这种方式捕获二进制特征之间的交互，为广义线性模型增加非线性
+```  
 
 **5. 实验结果**  
 ```shell  
@@ -167,7 +199,7 @@ c) 印象特征(impression feature)：app年龄，app历史数据
 分别随机选取了三组各1%的用户作为随机实验对象
 
 三组对象分别应用了三类模型的推荐系统：
-1) 高度优化的广度逻辑回归模型，具有丰富的交叉特征(cross-product feature transformations)
+1) 高度优化的广度逻辑回归模型，具有丰富的向量叉积特征变换(cross-product feature transformations)
 2) 具有相同特征和深度神经网络的深度模型
 3) 具有相同特征的深度广度结合模型
 
@@ -254,7 +286,7 @@ AUC用于衡量"二分类问题"机器学习算法性能(泛化能力)
 ```shell  
 记忆和泛化是推荐系统重要的两个方面
 
-广度线性模型借助交叉特征，能够有效记忆稀疏特征的关联
+广度线性模型借助向量叉积变换，能够有效记忆稀疏特征的关联
 
 深度神经网络可以通过低维嵌入泛化出之前未见的特征关联
 
