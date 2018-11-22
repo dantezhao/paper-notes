@@ -155,7 +155,6 @@ c) 印象特征(impression feature)：app年龄，app历史数据
 本文将广度和深度学习框架应用于上述第二个步骤排序系统中
 
 ```  
-<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
 
 **3. 广度和深度学习**  
 **3.1 广度部分**  
@@ -179,7 +178,7 @@ b 是bias(偏差)
 >向量叉积变换(cross product transformation)公式  
 
 其中C<sub>ki</sub>是一个布尔变量  
-如果第i个特征属于第k个变换&empty;<sub>k</sub><br>
+如果第i个特征属于第k个变换&Oslash;	<sub>k</sub>  
 那么C<sub>ki</sub>的值为1，否则为0  
 
 ```html  
