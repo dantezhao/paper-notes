@@ -179,7 +179,7 @@ b 是bias(偏差)
 >向量叉积变换(cross product transformation)公式  
 
 其中C<sub>ki</sub>是一个布尔变量  
-如果第i个特征属于第k个变换<span>&empty;<sub>k</sub></span>  
+如果第i个特征属于第k个变换&empty;<sub>k</sub>  
 那么C<sub>ki</sub>的值为1，否则为0  
 
 ```html  
