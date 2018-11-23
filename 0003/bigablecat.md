@@ -24,6 +24,8 @@
 广度和深度学习(wide & deep learning)方法的实现已经开源到TensorFlow中
 ```  
 
+<br>
+
 **1. 导言**  
 * 推荐系统也是一种搜索排序系统  
 ```shell  
@@ -59,7 +61,7 @@
 
 广义线性模型通常是基于二进制化的稀疏特征训练的
 
-这些特征使用了一位有效的编码形式(one-hot encoding)
+这些特征使用了独热编码(one-hot encoding)
 
 例如:
 user_installed_app=netflix值为1
@@ -100,7 +102,7 @@ user_installed_app=netflix值为1
 >Figure 1：广度和深度模型图谱
 
 ```shell  
-综上所述，本文同时训练一个线性模型模块和一个神经网络模块
+综上所述，本文对一个线性模型模块和一个神经网络模块进行联合训练(joint training)
 
 将记忆和泛化融入一个模型
 ```  
@@ -108,7 +110,7 @@ user_installed_app=netflix值为1
 * 本文的主要贡献  
 ```shell  
 1) 开发了一套广度和深度相结合的学习框架，用于稀疏输入的推荐系统
-这套框架同时训练"带嵌入的前馈神经网络"和"特征变换线性模型"
+这套框架对"带嵌入的前馈神经网络"和"特征变换线性模型"进行联合训练(joint trainning)
 
 2) 实现并评测了广度和深度推荐系统在Google Play市场的产品化
 
@@ -116,6 +118,8 @@ user_installed_app=netflix值为1
 
 广度和深度学习框架的思路简单，在满足训练和服务速度的前提下，显著改善了移动应用市场的app获得率
 ```  
+
+<br>
 
 **2. 推荐系统概述**  
 ![Overview_of_the_recommender_system](https://raw.githubusercontent.com/dantezhao/paper-notes/master/0003/bigablecat_Overview_of_the_recommender_system.png)  
@@ -156,14 +160,18 @@ c) 印象特征(impression feature)：app年龄，app历史数据
 
 ```  
 
+<br>
+
 **3. 广度和深度学习**  
+
 **3.1 广度部分**  
 ```shell  
-广度部分是Figure 1中Wide Models部分的广义线性模型
+广度部分是图Figure 1中Wide Models部分的广义线性模型
 ```  
+* 广义线性模型公式  
+>y = w<sup>T</sup>x + b  
 
-y = w<sup>T</sup>x + b  
-y表示预测值  
+>y表示预测值  
 x=[x<sub>1</sub>, x<sub>2</sub>,..., x<sub>d</sub>] 是d个特征的向量  
 w=[w<sub>1</sub>, w<sub>2</sub>,..., w<sub>d</sub>] 是模型的参数  
 b 是bias(偏差)  
@@ -174,23 +182,88 @@ b 是bias(偏差)
 其中最重要的一个变换就是向量叉积变换
 ```  
 
+* 向量叉积变换(cross product transformation)公式  
 ![cross product transformation](https://raw.githubusercontent.com/dantezhao/paper-notes/master/0003/bigablecat_cross_product_transformation.gif)  
->向量叉积变换(cross product transformation)公式  
-
-其中C<sub>ki</sub>是一个布尔变量  
+>其中C<sub>ki</sub>是一个布尔变量  
 如果第i个特征属于第k个变换&Oslash;	<sub>k</sub>  
 那么C<sub>ki</sub>的值为1，否则为0  
 
-```html  
+```shell  
 对于二进制特征，当且仅当组成特征都为1，它的向量叉积变换才是1，否则向量叉积为0
 
 通过这种方式捕获二进制特征之间的交互，为广义线性模型增加非线性
 ```  
 
+**3.2 深度部分**  
+```shell  
+深度部分是图Figure 1右侧的前馈神经网络
+
+分类特征的原始输入是特征字符串(如"language=en")
+
+每一个稀疏高维的分类特征都被转为低维高密的真值向量，通常被称为嵌入向量
+
+嵌入的维度大约在O(10)到O(100)的范围内
+
+嵌入向量先被随机初始化，然后它们的值在模型训练期间被用于最小化最终损失函数
+
+这些低维高密嵌入向量在前馈传递中被送入神经网络的隐藏层
+```  
+
+* 隐藏层使用的计算公式  
+![wide_deep_model](https://raw.githubusercontent.com/dantezhao/paper-notes/master/0003/bigablecat_hidden_layer_computation.gif)  
+>其中l是层数  
+f是激活函数，通常是一个线性整流函数ReLUs(rectified linear units)  
+a<sup>(l)</sup>是第l层的激活值(activations)  
+b<sup>(l)</sup>是第l层的偏差(bias)  
+W<sup>(l)</sup>的第l层的模型权重  
+
+**3.3 广度和深度模型的联合训练(joint training)**  
+
+* 联合训练(Joint Training)  
+```shell  
+广度部分和深度部分相结合时，使用了输出(output)对数几率(log odds)的加权和作为预测 
+
+这个加权和被送入一个通用的逻辑损失函数(logistic loss function)进行联合训练  
+```  
+
+* 联合训练(Joint Training)和集成训练(Ensemble)  
+```shell  
+1) 集成训练中
+
+每个模型都是独立训练，模型产生的预测在推导阶段整合而不是在训练阶段
+
+因为独立训练，模型的规模更大(更多特征和变换)以达到合理的准确性
+
+2) 联合训练中
+
+在训练阶段就同时优化了所有参数，包括广度部分和深度部分以及它们的加权和
+
+广度部分只需少量向量叉积特征变换补充深度部分即可，无需动用整个广度模型
+
+```  
+
+* FTRL算法  
+>联合训练中，使用了Follow-the-regularized-leader(FTRL)算法  
+模型广度部分使用L<sub>1</sub>范数(regularization)作为优化器  
+模型深度部分使用了AdaGrad  
+模型图示在图Figure 1的中间部分
+
+* 模型的计算公式  
+![wide_deep_model](https://raw.githubusercontent.com/dantezhao/paper-notes/master/0003/bigablecat_wide_deep_model.gif)  
+>Y表示二进制分类标签  
+&sigma;(·)表示反曲函数  
+&Oslash(X)表示原始特征x的向量叉积变换  
+b表示偏差(bias)项  
+W<sub>wide</sub>表示所有广度模型权重的向量  
+W<sub>deep</sub>表示应用于最终激活值a<sup>(l<sub>f</sub>)</sup>的权重  
+
+<br>  
+
 **5. 实验结果**  
 ```shell  
 本文主要从app获取率和服务性能两方面验证广度和深度学习模型的效果
 ```  
+
 **5.1 应用获取率(app aquisitions)**  
 ```shell  
 本文采用A/B测试进行了为期3周的在线实验
@@ -237,6 +310,8 @@ AUC用于衡量"二分类问题"机器学习算法性能(泛化能力)
 
 ```  
 
+<br>  
+
 **6. 相关研究**  
 * 分解机(factorization machines)  
 ```shell  
@@ -247,9 +322,10 @@ AUC用于衡量"二分类问题"机器学习算法性能(泛化能力)
 
 * 语言模型中的RNN  
 ```shell  
-同时训练
+对
 递归神经网络RNNs(Recurrent Neural Networks)和
 带语言模型特征的最大熵模型(Maximum entopy models with n-gram features)
+进行联合训练(joint training)
 
 学习输入和输出的直接权重，从而显著降低RNN的复杂度
 ```  
@@ -260,7 +336,7 @@ AUC用于衡量"二分类问题"机器学习算法性能(泛化能力)
 	a) 降低训练更深度模型的难度
 	b) 通过跳跃传递(shortcut connections)来提高准确性
 
-2) 同时训练带图像模型的神经网络可以从图片中识别人体姿势
+2) 对带图像模型的神经网络进行联合训练(joint training)可以从图片中识别人体姿势
 ```  
 
 * 推荐系统  
@@ -272,7 +348,7 @@ AUC用于衡量"二分类问题"机器学习算法性能(泛化能力)
 
 * 本文所用方法  
 ```shell  
-本文同时训练前馈神经网络和线性模型
+本文对前馈神经网络和线性模型进行联合训练(joint training)
 将稀疏特征和输出单元直接关联
 用于稀疏输入数据的推荐和排序问题
 
@@ -280,6 +356,8 @@ AUC用于衡量"二分类问题"机器学习算法性能(泛化能力)
 本文在用户和印象数据的基础上训练广度和深度相结合的模型
 
 ```  
+
+<br>  
 
 **7. 总结**  
 ```shell  
@@ -296,6 +374,8 @@ AUC用于衡量"二分类问题"机器学习算法性能(泛化能力)
 在线实现结果显示，相较于单纯的广度或深度模型，广度和深度结合的模型显著改善了app获得率
 
 ```  
+
+<br>  
 
 ##### <参考来源>：  
 a) [TensorFlow Wide And Deep 模型详解与应用（作者：汪剑）](https://blog.csdn.net/heyc861221/article/details/80131369?_blank)  
