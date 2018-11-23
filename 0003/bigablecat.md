@@ -170,7 +170,7 @@ c) 印象特征(impression feature)：app年龄，app历史数据
 ```  
 * 广义线性模型公式  
 >y = w<sup>T</sup>x + b  
-
+>
 >y表示预测值  
 x=[x<sub>1</sub>, x<sub>2</sub>,..., x<sub>d</sub>] 是d个特征的向量  
 w=[w<sub>1</sub>, w<sub>2</sub>,..., w<sub>d</sub>] 是模型的参数  
@@ -252,7 +252,7 @@ W<sup>(l)</sup>的第l层的模型权重
 ![wide_deep_model](https://raw.githubusercontent.com/dantezhao/paper-notes/master/0003/bigablecat_wide_deep_model.gif)  
 >Y表示二进制分类标签  
 &sigma;(·)表示反曲函数  
-&Oslash(X)表示原始特征x的向量叉积变换  
+&Oslash;(X)表示原始特征x的向量叉积变换  
 b表示偏差(bias)项  
 W<sub>wide</sub>表示所有广度模型权重的向量  
 W<sub>deep</sub>表示应用于最终激活值a<sup>(l<sub>f</sub>)</sup>的权重  
