@@ -1,5 +1,6 @@
 #### [Wide & Deep Learning for Recommender Systems](https://github.com/dantezhao/paper-notes/blob/master/0003/Wide%20%26%20Deep%20Learning%20for%20Recommender%20Systems.pdf)  
-##### <阅读笔记>  
+
+#### <阅读笔记>  
 
 ```shell  
 本文讲解了广度和深度学习相结合的方法，并以Google Play为例，介绍了该方法在推荐系统实践中的应用
@@ -29,6 +30,7 @@
 <br>
 
 **1. 导言**  
+
 * 推荐系统也是一种搜索排序系统  
 
 ```shell  
@@ -104,7 +106,9 @@ user_installed_app=netflix值为1
 ```  
 
 * 广度和深度学习框架  
+
 ![广度和深度模型图谱](https://raw.githubusercontent.com/dantezhao/paper-notes/master/0003/bigablecat_The_spectrum_of_Wide_And_Deep_models.png)  
+
 >Figure 1：广度和深度模型图谱
 
 ```shell  
@@ -129,7 +133,9 @@ user_installed_app=netflix值为1
 <br>
 
 **2. 推荐系统概述**  
+
 ![Overview_of_the_recommender_system](https://raw.githubusercontent.com/dantezhao/paper-notes/master/0003/bigablecat_Overview_of_the_recommender_system.png)  
+
 >Figure 2 展示了手机应用推荐系统的基本架构
 
 * 查询(Query)和用户行为(User Action)  
@@ -196,6 +202,7 @@ b 是bias(偏差)
 
 * 向量叉积变换(cross product transformation)公式  
 ![cross product transformation](https://raw.githubusercontent.com/dantezhao/paper-notes/master/0003/bigablecat_cross_product_transformation.gif)  
+
 >其中C<sub>ki</sub>是一个布尔变量  
 如果第i个特征属于第k个变换&Oslash;	<sub>k</sub>  
 那么C<sub>ki</sub>的值为1，否则为0  
@@ -224,6 +231,7 @@ b 是bias(偏差)
 
 * 隐藏层使用的计算公式  
 ![wide_deep_model](https://raw.githubusercontent.com/dantezhao/paper-notes/master/0003/bigablecat_hidden_layer_computation.gif)  
+
 >其中l是层数  
 f是激活函数，通常是一个线性整流函数ReLUs(rectified linear units)  
 a<sup>(l)</sup>是第l层的激活值(activations)  
@@ -258,6 +266,7 @@ W<sup>(l)</sup>的第l层的模型权重
 ```  
 
 * FTRL算法  
+
 >联合训练中，使用了Follow-the-regularized-leader(FTRL)算法  
 模型广度部分使用L<sub>1</sub>范数(regularization)作为优化器  
 模型深度部分使用了AdaGrad  
@@ -265,6 +274,7 @@ W<sup>(l)</sup>的第l层的模型权重
 
 * 模型的计算公式  
 ![wide_deep_model](https://raw.githubusercontent.com/dantezhao/paper-notes/master/0003/bigablecat_wide_deep_model.gif)  
+
 >Y表示二进制分类标签  
 &sigma;(·)表示反曲函数  
 &Oslash;(X)表示原始特征x的向量叉积变换  
@@ -287,6 +297,7 @@ W<sub>deep</sub>表示应用于最终激活值a<sup>(l<sub>f</sub>)</sup>的权�
 
 * 应用推荐系统管线概览(Figure 3)  
 
+![Apps_recommendation_pipeline_overview](https://raw.githubusercontent.com/dantezhao/paper-notes/master/0003/bigablecat_Apps_recommendation_pipeline_overview.png)  
 
 **4.1 数据生成(data generation)**  
 * 训练数据(training data)
@@ -309,6 +320,7 @@ W<sub>deep</sub>表示应用于最终激活值a<sup>(l<sub>f</sub>)</sup>的权�
 所有出现超过一定次数的字符串特征值，系统都会计算它们的ID空间(ID space)
 
 ```  
+
 >通过映射特征值x到它的累计分布函数P(X≤x)  
 再分为n<sub>q</sub>个分位数  
 连续真值特征会被归一化为[0,1] 
@@ -317,6 +329,8 @@ W<sub>deep</sub>表示应用于最终激活值a<sup>(l<sub>f</sub>)</sup>的权�
 
 
 **4.2 模型训练(Model Training)**  
+
+![Wide_and_Deep_model_structure.png](https://raw.githubusercontent.com/dantezhao/paper-notes/master/0003/bigablecat_Wide_and_Deep_model_structure.png)  
 
 ```shell  
 模型结构如图Figure 4所示
@@ -444,6 +458,7 @@ AUC用于衡量"二分类问题"机器学习算法性能(泛化能力)
 <br>  
 
 **6. 相关研究**  
+
 * 分解机(factorization machines)  
 
 ```shell  
