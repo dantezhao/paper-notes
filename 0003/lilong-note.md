@@ -1,14 +1,15 @@
 ## Wide & Deep Learning for Recommender Systems 阅读笔记
 
-## 0 现有方法的不足
+
+### 0 现有方法的不足
 
 现有wide模型memorization能力强，不具备generalization能力。deep模型具备generalization能力，但在数据稀疏的情况下也存在过于“泛化”，进而推荐不相关物品的情况。
 
-## 1 WDL是如何解决这个问题的
+### 1 WDL是如何解决这个问题的
 
 WDL将wide linear model 和deep neural network 结合起来，一起训练。WDL模型的优势在于同时获得了wide模型的memorization（“记忆”）能力，和deep模型的generalization（“泛化”）能力。
 
-## 2 两个问题
+### 2 两个问题
 
 什么是“记忆”能力和“泛化”能力？
 
@@ -46,7 +47,7 @@ WDL模型的函数表达如下：
 ![](https://raw.githubusercontent.com/dantezhao/paper-notes/master/0003/bigablecat_wide_deep_model.gif)
 
 
-## 3 WDL模型与ensemble的区别
+### 3 WDL模型与ensemble的区别
 
 本文将wide模型和deep模型联合训练不同于一般的模型融合（ensemble）。
 
@@ -54,7 +55,7 @@ ensemble时，单个的基模型在训练的时候是彼此独立的。只有在
 
 WDL是将wide模型和deep模型作为一个整体进行训练，意味着同步用反向传播技术更新wide模型和deep模型的参数
 
-## 4 实验结果
+### 4 实验结果
 
 实验结果也表明，WDL模型不管是在线下还是线上相比于单独的wide模型和单独的deep模型，效果都有明显提升。
 
