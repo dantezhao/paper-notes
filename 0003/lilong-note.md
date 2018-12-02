@@ -1,6 +1,4 @@
-#### [Wide & Deep Learning for Recommender Systems]
-
-#### <阅读笔记>  
+## Wide & Deep Learning for Recommender Systems 阅读笔记
 
 ## 0 现有方法的不足
 
