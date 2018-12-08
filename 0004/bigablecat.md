@@ -86,7 +86,7 @@ b) 或者使用多层神经网络
 
 * 秩约束矩阵  
 
-![model_architecture_of_fasttext](https://raw.githubusercontent.com/dantezhao/paper-notes/master/0004/bigablecat_bigablecat_model_architecture_of_fasttext.gif)  
+![model_architecture_of_fasttext](https://raw.githubusercontent.com/dantezhao/paper-notes/master/0004/bigablecat_model_architecture_of_fasttext.gif)  
 
 >Figure 1 秩约束矩阵
 
