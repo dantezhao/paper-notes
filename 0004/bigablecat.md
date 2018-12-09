@@ -32,6 +32,7 @@ fastText是一个简单高效的文本分类器
 <br>
 
 **1. 导言**  
+
 * 简单介绍  
 
 ```shell  
@@ -63,6 +64,8 @@ fastText是一个简单高效的文本分类器
 文章通过标签预测和情感分析这两个任务来评估fastText的效果
 
 ```  
+
+<br>
 
 **2. 模型设计(Model architecture)**  
 
@@ -108,11 +111,69 @@ b) 或者使用多层神经网络
 
 ![softmax function](https://raw.githubusercontent.com/dantezhao/paper-notes/master/0004/bigablecat_softmax_function.gif)  
 
->x<sub>n</sub>是进行了标准化的第n个文本的特征包(bag of features)  
-y<sub>n</sub>表示标签  
-A和B代表权重矩阵  
-这个模型使用随机梯度下降和线性衰减学习速率在多核CPU上进行异步训练
+>x<sub>n</sub>是第n个文本的标准化特征包(normalized bag of features)  
 
+>y<sub>n</sub>表示标签(label)  
+
+>A和B代表权重矩阵(weight matrices)  
+
+>这个模型使用随机梯度下降(stochastic gradient descent)和线性衰减学习速率(linearly decaying learning rate)在多核CPU上进行异步训练  
+
+**2.1 层次softmax函数(Hierarchical softmax)**  
+
+* 改善计算复杂度  
+
+```shell  
+
+当类型的数量非常庞大时，线性分类器的计算代价太高
+
+为了降低运行时间，模型引入了：
+基于霍夫曼编码树(Huffman coding tree)的层次softmax函数(Hierarchical softmax)
+
+```  
+
+* 训练(training)：  
+
+>1) 普通线性分类器：  
+O(kh)，k是类型数量，h是文本表征的维度  
+
+>2) 层次softmax函数：  
+O(hlog<sub>2</sub>(k))  
+
+* 测试(test):  
+
+>1) 普通线性分类器：  
+O(kh)，k是类型数量，h是文本表征的维度  
+
+>2) 层次softmax函数：  
+O(hlog<sub>2</sub>(k))  
+
+>3) 在层次softmax函数基础上引入二叉堆(binary heap)计算T-top节点：  
+O(log(T))  
+
+* 对测试(test)时节点概率的进一步解释  
+
+![node_probability](https://raw.githubusercontent.com/dantezhao/paper-notes/master/0004/bigablecat_node_probability.gif)  
+
+>上面的公式用于表示与节点相关的概率  
+
+>(l + 1) 表示节点深度(depth)  
+
+>n<sub>1</sub>,...,n<sub>l</sub> 表示节点的所有父节点  
+
+>每个节点都与根节点到该节点路径的概率相关  
+
+```shell  
+
+每个节点的概率总是小于其父节点的概率
+
+搜索树时直接从最大概率的叶子节点开始查找
+
+舍弃小概率的叶子节点  
+
+上述操作降低了测试的计算复杂度  
+
+```  
 
 **3. 实验(Experiments)**  
 
