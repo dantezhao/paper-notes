@@ -65,6 +65,8 @@ fastText是一个简单高效的文本分类器
 
 ```  
 
+<br>
+
 **2. 模型设计(Model architecture)**  
 
 * 原有线性模型文本分类器的一些问题  
@@ -109,10 +111,13 @@ b) 或者使用多层神经网络
 
 ![softmax function](https://raw.githubusercontent.com/dantezhao/paper-notes/master/0004/bigablecat_softmax_function.gif)  
 
->x<sub>n</sub>是进行了标准化的第n个文本的特征包(bag of features)  
->y<sub>n</sub>表示标签  
->A和B代表权重矩阵  
->这个模型使用随机梯度下降和线性衰减学习速率在多核CPU上进行异步训练  
+>x<sub>n</sub>是第n个文本的标准化特征包(normalized bag of features)  
+
+>y<sub>n</sub>表示标签(label)  
+
+>A和B代表权重矩阵(weight matrices)  
+
+>这个模型使用随机梯度下降(stochastic gradient descent)和线性衰减学习速率(linearly decaying learning rate)在多核CPU上进行异步训练  
 
 **2.1 层次softmax函数(Hierarchical softmax)**  
 
@@ -151,8 +156,11 @@ O(log(T))
 ![node_probability](https://raw.githubusercontent.com/dantezhao/paper-notes/master/0004/bigablecat_node_probability.gif)  
 
 >上面的公式用于表示与节点相关的概率  
->(l + 1) 表示节点深度  
+
+>(l + 1) 表示节点深度(depth)  
+
 >n<sub>1</sub>,...,n<sub>l</sub> 表示节点的所有父节点  
+
 >每个节点都与根节点到该节点路径的概率相关  
 
 ```shell  
