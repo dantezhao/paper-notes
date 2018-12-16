@@ -264,15 +264,24 @@ fastText
 ```shell  
 
 Table 1：
+
 fastText使用10个隐藏层(hidden units)运行5个回合(epochs)  
-学习率从验证集{0.05, 0.1, 0.25, 0.5}中获取
+
+学习率(learning rate)从验证集{0.05, 0.1, 0.25, 0.5}中获取
+
 添加二元分词(bigram)信息可以将整体表现提升1~4%
+
 整体来看fastText准确率比char-CNN和char-CRNN稍高，略差于VDCNN
+
 使用更多分词可以略微提高准确率，如三元分词(trigrams)可将Sogou数据集上的准确率提升至97.1%
 
+
 Table 3：
+
 fastText比Table 3中其他几种方法都好
+
 调整验证集中的超参(hyper-parameters)发现n-grams为5时模型效果最好
+
 fastText没有使用预训练的词嵌入(pre-trained word embeddings)可能是1%准确率差异的原因
 
 ```  
@@ -281,13 +290,18 @@ fastText没有使用预训练的词嵌入(pre-trained word embeddings)可能是1
 
 ```shell  
 char-CNN和VDCNN都在NVIDIA tESLA K40 GPU上进行训练
+
 fastText在20个线程的CPU上训练
 
+
 Table 2显示使用卷积的方法比fastText慢了若干个数量级
+
 如果char-CNN使用更新的CUDA卷积实现，速度能够加快10倍
+
 fastText在一分钟内就能在同样的数据集上完成训练
 
 GRNN方法在单线程的CPU上一个回合(epoch)耗费12个小时
+
 相比于神经网络方法，fastText随着数据量增大至少增速15000倍
 
 ```  
