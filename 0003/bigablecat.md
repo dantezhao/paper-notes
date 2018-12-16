@@ -535,7 +535,7 @@ AUC用于衡量"二分类问题"机器学习算法性能(泛化能力)
 
 <br>  
 
-##### <参考来源>：  
+##### <参考资料>：  
 a) [TensorFlow Wide And Deep 模型详解与应用（作者：汪剑）](https://blog.csdn.net/heyc861221/article/details/80131369?_blank)  
 b) [TensorFlow Wide And Deep 模型详解与应用（二）（作者：汪剑）](https://blog.csdn.net/heyc861221/article/details/80131373?_blank)  
 c) [ROC与AUC的定义与使用详解](https://blog.csdn.net/shenxiaoming77/article/details/72627882?_blank)  
