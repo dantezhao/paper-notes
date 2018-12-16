@@ -206,6 +206,100 @@ O(log(T))
 
 ```  
 
+**3.1 情感分析(Sentiment analysis)**  
+
+```shell  
+情感分析进行了两组实验  
+
+第一组实验将fastText和另外6个模型在8个数据集上进行对比
+
+第二组实验将fastText和另外4个模型在4个数据集上进行对比
+```  
+
+
+* 第一组实验(Table 1)  
+
+```shell  
+
+fastText, h=10  
+
+fastText, h=10, bigram  
+
+其他模型：  
+
+1) BoW  
+
+2) n-grams  
+
+3) TF-IDF(term frequency–inverse document frequency)  
+
+4) char-CNN，字符级卷积神经网络(character level convolutional model)  
+
+5) char-CRNN，字符级循环卷积神经网络(character based convolution recurrent network)  
+
+6) VDCNN，超深卷积神经网络(very deep convolutional network)  
+
+```  
+
+* 第二组实验(Table 3)  
+
+```shell  
+
+fastText
+
+模型：
+
+1) SVM+TF  
+
+2) CNN  
+
+3) Conv-GRNN  
+
+4) LSTM-GRNN  
+
+```  
+
+* 结果  
+
+```shell  
+
+Table 1：
+fastText使用10个隐藏层(hidden units)运行5个回合(epochs)  
+学习率从验证集{0.05, 0.1, 0.25, 0.5}中获取
+添加二元分词(bigram)信息可以将整体表现提升1~4%
+整体来看fastText准确率比char-CNN和char-CRNN稍高，略差于VDCNN
+使用更多分词可以略微提高准确率，如三元分词(trigrams)可将Sogou数据集上的准确率提升至97.1%
+
+Table 3：
+fastText比Table 3中其他几种方法都好
+调整验证集中的超参(hyper-parameters)发现n-grams为5时模型效果最好
+fastText没有使用预训练的词嵌入(pre-trained word embeddings)可能是1%准确率差异的原因
+
+```  
+
+* 训练时间(training time)  
+
+```shell  
+char-CNN和VDCNN都在NVIDIA tESLA K40 GPU上进行训练
+fastText在20个线程的CPU上训练
+
+Table 2显示使用卷积的方法比fastText慢了若干个数量级
+如果char-CNN使用更新的CUDA卷积实现，速度能够加快10倍
+fastText在一分钟内就能在同样的数据集上完成训练
+
+GRNN方法在单线程的CPU上一个回合(epoch)耗费12个小时
+相比于神经网络方法，fastText随着数据量增大至少增速15000倍
+
+```  
+
+**3.1 情感分析(Sentiment analysis)**  
+
+```shell  
+
+
+```  
+
+
 <br>
 
 **4. 探讨和结论**  
@@ -227,3 +321,9 @@ fastText最终效果比肩深度学习方法且速度更快
 
 
 <br>  
+
+
+##### <参考资料>：  
+
+a) [神经网络训练中，Epoch、Batch Size和迭代傻傻分不清](https://cloud.tencent.com/developer/article/1117838)  
+b) [Training Hidden Units with Back Propagation](https://web.stanford.edu/group/pdplab/pdphandbook/handbookch6.html)  
