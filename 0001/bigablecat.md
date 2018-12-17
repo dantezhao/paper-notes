@@ -1,5 +1,6 @@
-#### [Goods: Organizing Google’s Datasets](https://github.com/dantezhao/paper-notes/blob/master/0001/Goods%20Organizing%20Google%E2%80%99s%20Datasets.pdf)  
-##### <阅读笔记>  
+#### [&lt;Goods: Organizing Google’s Datasets&gt;](https://github.com/dantezhao/paper-notes/blob/master/0001/Goods%20Organizing%20Google%E2%80%99s%20Datasets.pdf)  
+##### 阅读笔记  
+
 ```shell  
 Google Dataset Search (Goods)是一个以元数据的形式管理数据集的企业内部系统
 这篇论文介绍了Goods的设计和用途
@@ -13,7 +14,9 @@ Google Dataset Search (Goods)是一个以元数据的形式管理数据集的企
 **0. 摘要**  
 
 **0.1 文章目标**  
+
 * 探讨实现数据管理所面临的技术挑战 (Challenges)  
+
 ```shell  
 从亿万级数据源爬取和推断元数据
 
@@ -21,18 +24,23 @@ Google Dataset Search (Goods)是一个以元数据的形式管理数据集的企
 
 使用元数据为用户提供服务
 ```  
+
 * 对于打造大规模企业级数据管理系统的借鉴意义  
 
 **1. 引言**  
 
 **1.1 企业数据管理的两种形式**  
+
 * Enterprise Data Management (EDM)  
+
 ```shell  
 生成数据集和管理数据集都在一套系统内
 
 系统本身限制了数据的生产和流转
 ```  
+
 * Data Lake  
+
 ```shell  
 与EDM不同的是，Data Lake采取事后(post-hoc)模式  
 
@@ -46,7 +54,9 @@ lake的比喻很形象，数据不断生成和累积汇聚成湖，查找数据�
 ```  
 
 **1.2 Google Dataset Search (Goods)**  
+
 * Goods是一个静默的服务者
+
 ```shell  
 Goods的全称是Google Dataset Search，但它的功能不限于search
 
@@ -58,10 +68,12 @@ post-hoc将在文中多次出现，强调Goods是静默的辅助工具
 ```  
 
 **1.3 Goods的运作机制**  
+
 ![Goods设计概览](https://raw.githubusercontent.com/dantezhao/paper-notes/master/0001/Goods_design.png)  
 >图：Goods设计概览  
 
 * 分层介绍  
+
 ```shell  
 1) Goods持续地爬取(crawls)各类存储系统和业务线，
 从中发现数据集(datasets)并收集数据集的元数据(datasets)信息和使用情况(usage)
@@ -76,6 +88,7 @@ post-hoc将在文中多次出现，强调Goods是静默的辅助工具
 ```  
 
 * 关于元数据(metadata)  
+
 ```shell  
 1) 元数据信息的一个来源是直接从数据源收集
 
@@ -92,7 +105,9 @@ post-hoc将在文中多次出现，强调Goods是静默的辅助工具
 ```  
 
 **1.4 Goods提供的一些工具**  
+
 * dashboard 仪表板  
+
 ```shell  
 展示所有数据集  
 
@@ -104,6 +119,7 @@ post-hoc将在文中多次出现，强调Goods是静默的辅助工具
 ```  
 
 * monitor 监控  
+
 ```shell  
 监控内容特征：如大小、数值的分布、是否可用  
 
@@ -111,6 +127,7 @@ post-hoc将在文中多次出现，强调Goods是静默的辅助工具
 ```  
 
 * provenance 数据血缘关系  
+
 ```shell  
 生成某数据集的上游数据
   
@@ -118,11 +135,13 @@ post-hoc将在文中多次出现，强调Goods是静默的辅助工具
 ```  
 
 * search engine 搜索引擎  
+
 ```shell  
 缩小搜索范围
 ```  
 
 * Goods API  
+
 ```shell  
 通过暴露接口，所有的团队都能为元数据目录做贡献，形成一种crowd-sourced(众包)的方式
 
@@ -132,6 +151,7 @@ post-hoc将在文中多次出现，强调Goods是静默的辅助工具
 **2. Goods系统的技术挑战**  
 
 **2.1 天量数据规模**  
+
 ```shell  
 Goods系统为超过260亿个数据集建立了索引
 
@@ -145,6 +165,7 @@ Goods系统为超过260亿个数据集建立了索引
 ```  
 
 **2.2 多样性**  
+
 ```shell  
 数据集以各种格式存储，来自各式存储系统，多样性成为数据统一管理问题之一
 
@@ -157,7 +178,8 @@ Goods系统在推断元数据的时候，需要考量元数据的成本和收益
 多样性也体现在数据集的相互关系中，而数据集的相互关系反过来影响元数据在Goods目录的计算和存储
 ```  
 
-**2.3 目录条目(Catalog Entries)的变动**    
+**2.3 目录条目(Catalog Entries)的变动**  
+
 ```shell  
 Goods目录条目中，每天约有5%左右的数据集被删除
 
@@ -169,6 +191,7 @@ Goods目录条目中，每天约有5%左右的数据集被删除
 ```  
 
 **2.4 元数据的不确定性**  
+
 ```shell  
 Goods系统采取事后(post-hoc)非侵入(non-invasive)的方式，无法全程把握数据集的产生
 
@@ -176,6 +199,7 @@ Goods根据已有数据推断和计算出的元数据，在一定程度并不精
 ```  
 
 **2.5 计算数据集重要性**  
+
 ```shell  
 推算数据集对使用者的重要性和在网页检索中推算网页的重要性不同
 
@@ -189,6 +213,7 @@ Goods根据已有数据推断和计算出的元数据，在一定程度并不精
 ```  
 
 **2.6 复原数据集语义**  
+
 ```shell  
 数据集的语义可以通俗地理解为数据集的某项内容代表了什么
 
@@ -202,7 +227,9 @@ Goods根据已有数据推断和计算出的元数据，在一定程度并不精
 ```  
 
 **3. Goods系统的目录(Catalog)**  
+
 * 综述  
+ 
 ```  
 Google内部每个存储系统都可能维护着自己的catalog，每个catalog还会有自己的metadata
 
@@ -218,7 +245,9 @@ Goods所做的就是为所有存储系统和数据集建立统一的目录
 ```  
 
 **3.1 元数据(Metadata)**  
+
 * 概要  
+
 ```shell  
 终于讲到了Goods系统的关键要素————元数据(metadata)
 
@@ -234,6 +263,7 @@ Goods系统在爬取数据集的时候，会顺带获取一些元数据，如数
 >Table2: 元数据(Metadata)和元数据组(Metadata Group)  
 
 * 基础元数据(Basic Metata)  
+
 ```shell  
 包括时间戳、文件格式、所有者、访问权限等
 
@@ -243,6 +273,7 @@ Goods的其他模块通常将基础元数据作为行为依据之一
 ```  
 
 * 数据血缘/数据谱系(Provenance)  
+
 ```shell  
 Goods中的元数据血缘关系来自数据集的生产和消费过程、数据集上下游依赖
 
@@ -254,6 +285,7 @@ Goods将时间信息用于决定依赖关系，即晚发生的依赖于早发生
 ```  
 
 * 结构信息(Schema)  
+
 ```shell  
 Google内几乎所有结构化数据集都是基于serialized protocol buffer编码的
 
@@ -262,8 +294,8 @@ Google内几乎所有结构化数据集都是基于serialized protocol buffer编
 Goods系统把所有可能的protocol buffer形式都记录在元数据中
 ```  
 
-
 * Content summary  
+
 ```shell  
 Content summary按照字面直译为内容摘要反而不容易理解
 
@@ -278,6 +310,7 @@ Goods通过summary来判断来自不同数据集的内容或者字段是否相�
 ```  
 
 * 用户注释(User-provided annotations)  
+
 ```shell  
 一般用户做注释都是为了明确告知数据集的使用者有必要知晓的信息
 
@@ -285,6 +318,7 @@ Goods的元数据通过分析注释来优化排序或者规避数据隐私
 ```  
 
 * 语义学信息(Semantics)  
+
 ```shell  
 数据集的语义学信息可以帮助理解数据集
 
@@ -298,6 +332,7 @@ Google的知识图谱可以作为一个资源库，Goods系统将数据集内容
 
 
 * 其他  
+
 ```shell  
 除上述类型的元数据外，Goods系统还会将以下信息作为元数据的内容：
 a) 获取一个标识，通过该标识可以确认拥有数据集的团队(team)
@@ -309,11 +344,38 @@ c) 数据集元数据的变更历史
 
 **3.2 数据集群(cluster)**  
 
+
+<br>  
+
 **8 结论和展望(conclusions and future work)**  
+
 * 总结  
+
 ```shell  
 本文介绍的数据管理系统，可访问企业内部数以十亿计的数据集的元数据
+```  
 
+* 挑战  
 
+```shell  
+1) 对数据集全排列，鉴别重要数据集，数据集的排序方法是否和网页排序方法类似
+
+2) 完善元数据需要依赖各种资源和信息
+
+3) 理解隐含在数据集中的语义信息能为用户提供更有效的搜索服务，
+而对语义的理解也需要借助其他资源比如Google的知识图谱(Knowledge Graph)
+
+4) 数据集产生的时候就在Goods上注册能够保持目录更新，
+而这种方式需要修改现有的存储系统，与Goods非侵入式的理念冲突，
+如何结合非侵入式和侵入式仍然有待解决
+
+```  
+
+* 期望  
+
+```shell  
+希望类似Goods的数据管理系统能够助推数据导向型公司培养一种数据文化
+
+企业将数据当作企业核心资产，发展出类似"代码规约"的"数据规约(data discipline)"
 
 ```  
