@@ -28,3 +28,4 @@
 |0002|The Wisdom of the Few|基于专家意见的协调过滤算法|20181105-20181118| dantezhao |
 |0003|Wide & Deep Learning for Recommender Systems|推荐系统中比较流行的 wide and deep learning|20181119-20181202| Long Li  |
 |0004|Bag of Tricks for Efficient Text Classification|提出fasttext的论文，经典|20181203-20181216|  theta666  |
+|0005|Deep Learning|LeCun，Bengio和Hinton三位人工智能大佬在Nature上刊发的一篇Review|20181217-20181230|    |
