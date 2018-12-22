@@ -259,6 +259,7 @@ Goods系统在爬取数据集的时候，会顺带获取一些元数据，如数
 
 综上所述，Goods除了爬取获得元数据外，还会通过推断(inference)获取元数据
 ```  
+
 ![Metadata_Table](https://raw.githubusercontent.com/dantezhao/paper-notes/master/0001/bigablecat_Metadata.png)  
 >Table2: 元数据(Metadata)和元数据组(Metadata Group)  
 
@@ -344,8 +345,194 @@ c) 数据集元数据的变更历史
 
 **3.2 数据集群(cluster)**  
 
+* 数据集重复问题  
+
+```shell  
+Goods目录上的260亿个数据集并非完全独立，很多数据集存在内容重复，比如：
+
+a) 相同数据集的不同版本  
+
+b) 相同数据集复制到不同的数据中心  
+
+c) 大数据集被切分为小数据集  
+
+...   
+```  
+
+* 数据集集群化的好处  
+
+```shell  
+
+针对上述问题，将类似数据集归纳为集群有如下好处：
+
+a) 为用户提供合乎逻辑的数据集分组
+
+b) 只需计算集群中的少量数据集的元数据，节约计算成本
+
+
+```  
+
+* 集群化的技术考量  
+
+```shell  
+将数据集集群化的计算成本要足够低，才值得使用
+
+生成集群的计算成本不能高于重复计算相似数据集的成本
+
+```  
+
+* 根据路径(path)层级(hierarchies)生成集群  
+
+```shell  
+数据集的路径可以提供划分集群的思路  
+
+某个数据集路径  
+dataset/2015-10-10/daily_scan
+
+按天分类  
+dataset/2015-10-<day>/daily_scan
+
+按月份和日期分类  
+dataset/2015-<month>-<day>/daily_scan  
+```  
+
+* 多粒度的半网格结构(granularity semi-lattice)  
+
+![Metadata_Table](https://raw.githubusercontent.com/dantezhao/paper-notes/master/0001/bigablecat_semi_lattice.png)  
+>Figure 2展示了两种层次的集群划分：按天划分和按版本号划分  
+
+![Metadata_Table](https://raw.githubusercontent.com/dantezhao/paper-notes/master/0001/bigablecat_path_dimensions.png)  
+>Table 3展示了构建集群所依赖的数据集维度  
+
+```shell  
+从数据集的路径抽离出不同维度(dimensions，如日期、版本号)
+为每个数据集构建一个半网格(semi-lattice)结构  
+
+在Figure 2所示的半网格结构中，非叶子节点代表了数据集的分组依据  
+```  
+
+* 集群的日常更新和重复映射问题  
+
+```shell  
+如果分组情况每天计算和更新，可能造成用户每天都看到不同的集群  
+
+为了解决这个问题，Goods只为每个半网格的顶层元素创建条目(entry)  
+
+如Figure 2，目录将只有顶层的条目/dataset/<date>/<version>，
+对应网格底层的三个数据集  
+
+采用这种方式可以保证每个数据集只映射到一个集群，
+总的集群条目数量也会下降
+```  
+
+* 集群的元数据  
+
+![Metadata_Table](https://raw.githubusercontent.com/dantezhao/paper-notes/master/0001/bigablecat_propagation_metadata.png)  
+> Figure 4 将3个数据集的元数据汇总成集群元数据  
+
+```shell  
+Goods系统通过汇总集群中各个数据集的元数据，生成该集群的元数据  
+
+集群的元数据以实时计算的方式产生，用于区分通过分析推断得出的元数据  
+```  
+
+* 数据集在集群中的分布  
+
+![Metadata_Table](https://raw.githubusercontent.com/dantezhao/paper-notes/master/0001/bigablecat_distribution_cluster.png)  
+> Figure 3 用柱状图的方式展示了数据集在集群中的分布情况  
+
+```shell  
+集群化可以将"物理"集群压缩为"逻辑"集群
+
+极大地降低了元数据的计算成本  
+
+用户可以通过集群更方便地查阅Goods系统的目录  
+```  
 
 <br>  
+
+**4 后端实现(Backend Implementation)**  
+
+```shell  
+本节主要讨论：
+
+Goods系统目录(catalog)的物理结构  
+
+向目录中不断增加新模块的方法  
+
+目录数据的一致性  
+
+目录的容错机制
+```  
+
+**4.1 目录存储(Catalog storage)**  
+
+* Bigtable的行存储  
+
+```shell  
+a) 目录使用Bigtable作为存储中介
+
+Bigtable是一种可伸缩的，键值对存储系统
+
+在目录中，Bigtable中的一行代表一个数据集或一个集群
+
+Bigtable提供了单行事务一致性(per-row transactional consistency)  
+
+数据集路径或者集群路径作为这一行的键  
+
+通过这种方式，数据集对应单行，无需查找多余信息
+
+b) Goods系统中与单行单个数据集处理方式相左的特性
+
+数据集提取半网格结构时，将多行信息整合到逻辑数据集中
+
+累计同个集群中不同数据集的元数据  
+
+不过这种元数据累加并不需要强一致性
+```  
+
+* Bigtable的列族(column families)  
+
+```shell  
+一张Bigtable表格包含多个独立的列族  
+
+Goods的Bigtable中还设置了一些独立列族专门进行批量处理(高压缩率，非内存驻留)  
+
+只能通过批处理任务访问的数据就存在这些列族中  
+
+比如Goods系统中最大的列族，就包含了用于计算血缘图谱的原始血缘数据
+
+这些血缘数据内容不直接面向前端，仅为部分集群提供服务，因而可以高度压缩
+```  
+
+* 元数据在Bigtable中的存储  
+
+```shell  
+在目录的Bigtable中，每行存储两种元数据信息： 
+
+a) 数据集的元数据 
+
+b) 状态元数据(status metadata)：对某个数据集处理后生成的结果
+
+```  
+
+* 状态元数据(status metadata)  
+
+```sehll  
+状态元数据列出了用于处理条目的(entry)每一个模块
+
+状态元数据可能包含时间戳，成功状态，错误信息等内容
+
+Goods使用状态元数据协调模块的执行
+
+状态元数据也可以检测系统，比如通过成功状态观察数据集，收集出现次数最多的错误码
+
+与Bigtable的临时数据模型配合，状态元数据还能用于调试(debugging)  
+
+通过配置Bigtable，保留若干代的状态元数据
+
+这些代际数据能够揭示模块的历史表现
+```  
 
 **8 结论和展望(conclusions and future work)**  
 
