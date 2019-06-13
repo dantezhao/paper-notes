@@ -1,4 +1,4 @@
-#### [&lt;GooDs: Organizing Google’s Datasets&gt;](https://github.com/dantezhao/paper-notes/blob/master/0001/Goods%20Organizing%20Google%E2%80%99s%20Datasets.pdf)  
+#### [<GooDs: Organizing Google’s Datasets>](https://github.com/dantezhao/paper-notes/blob/master/0001/Goods%20Organizing%20Google%E2%80%99s%20Datasets.pdf)  
 ##### 阅读笔记  
 
 ```shell  
@@ -92,7 +92,7 @@ post-hoc将在文中多次出现，强调GooDs是静默的辅助工具
 ```shell  
 1) 元数据信息的一个来源是直接从数据源收集
 
-2) 元数据还可以来源于对数据内容的推断(infer)：
+2) 元数据的另一个来源是对数据内容的推断(inference)：
     a. 处理附加的数据源，如日志、数据集所有者和项目信息等
     c. 分析数据集的内容
     d. 收集GooDs使用者输入
@@ -236,9 +236,9 @@ Google内部每个存储系统都可能维护着自己的catalog，每个catalog
 
 GooDs所做的就是为所有存储系统和数据集建立统一的目录
 
-原则上GooDs为每个爬取的数据集建立条目(entry)
+Catalog上的一条记录称之为条目(entry)，原则上每个entry对应一个数据集(dataset)的元数据
 
-而出现一些特征相似度高的集群时，GooDs会将它们归并为一个集群(cluster)，建立单个条目
+当出现一些特征相似度高的集群时，GooDs会将它们归并为一个集群(cluster)，建立单个条目(entry)
 
 集群的一个典型例子就是相同数据集的不同版本
 ```  
@@ -250,19 +250,31 @@ GooDs所做的就是为所有存储系统和数据集建立统一的目录
 ```shell  
 终于讲到了GooDs系统的关键要素————元数据(metadata)
 
+元数据(metadata)包含很多信息，总结起来就是用于描述数据集的信息，即"数据的数据"
+```  
+
+* 元数据的来源  
+
+```shell  
+元数据的途径有两种：
+
+第一种可以通过直接访问获取：
+
 GooDs系统在爬取数据集的时候，会顺带获取一些元数据，如数据集的大小、所有者、访问权限等
 
 但是数据集并没有保存所有的元数据信息，比如生成数据集的作业(jobs)，数据集的访问者等
 
 不能从数据集直接获取的元数据往往存在于日志中
 
-综上所述，GooDs除了爬取获得元数据外，还会通过推断(inference)获取元数据
+第二种通过GooDs系统计算得出：
+
+GooDs除了爬取获得元数据外，还会通过推断(inference)获取元数据
 ```  
 
 ![Metadata_Table](https://raw.githubusercontent.com/dantezhao/paper-notes/master/0001/bigablecat_Metadata.png)  
 >Table2: 元数据(Metadata)和元数据组(Metadata Group)  
 
-* 基础元数据(Basic Metata)  
+* 基础元数据(Basic Metadata)  
 
 ```shell  
 包括时间戳、文件格式、所有者、访问权限等
@@ -279,7 +291,7 @@ GooDs中的元数据血缘关系来自数据集的生产和消费过程、数据
 
 GooDs通过分析生产日志来确定元数据的血缘信息
 
-GooDs将时间信息用于决定依赖关系，即晚发生的依赖于早发生的
+GooDs用时间顺序决定依赖关系，即晚发生的依赖于早发生的
 
 在计算血缘关系时，GooDs为了效率可能会牺牲信息的完整性
 ```  
@@ -577,7 +589,7 @@ c) 新的分析模块
 
 大多数任务每天运行，并在24小时候内完工
 
-我们会优化超时运行的任务，或者使用并行任务分摊工作量
+GooDs会优化超时运行的任务，或者使用并行任务分摊工作量
 
 这些额外添加的任务，以24小时为周期处理，
 专门处理新增目录行或者重新处理超出时间窗口的数据
