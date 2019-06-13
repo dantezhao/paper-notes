@@ -1,4 +1,4 @@
-#### [<GooDs: Organizing Google’s Datasets>](https://github.com/dantezhao/paper-notes/blob/master/0001/Goods%20Organizing%20Google%E2%80%99s%20Datasets.pdf)  
+#### [<GooDs: Organizing Google’s Datasets>](https://storage.googleapis.com/pub-tools-public-publication-data/pdf/45390.pdf)  
 ##### 阅读笔记  
 
 ```shell  
